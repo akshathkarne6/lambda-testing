@@ -1,4 +1,5 @@
-name: Deploy Lambda Functions
+name: Deploy Lambda Function
+
 on:
   push:
     branches:
@@ -22,6 +23,11 @@ jobs:
     - name: Log in to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Create ECR Repository
+      run: |
+        aws ecr describe-repositories --repository-names my-lambda || \
+        aws ecr create-repository --repository-name my-lambda
 
     - name: Build Docker Image
       run: docker build -t my-lambda .
